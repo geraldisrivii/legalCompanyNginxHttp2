@@ -1,0 +1,4 @@
+2023/07/05 02:03:43 [notice] 45#45: signal process started
+2023/07/05 02:04:00 [error] 49#49: *44 open() "/var/www/html/favicon.ico" failed (2: No such file or directory), client: 172.19.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:150", referrer: "http://localhost:150/"
+2023/07/05 02:04:25 [error] 47#47: *39 open() "/var/www/html/favicon.ico" failed (2: No such file or directory), client: 172.19.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:150", referrer: "http://localhost:150/"
+2023/07/05 02:04:38 [error] 49#49: *44 open() "/var/www/html/favicon.ico" failed (2: No such file or directory), client: 172.19.0.1, server: , request: "GET /favicon.ico HTTP/1.1", host: "localhost:150", referrer: "http://localhost:150/"
