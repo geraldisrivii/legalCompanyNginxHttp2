@@ -38,13 +38,13 @@ import gulpFileIncluder from 'gulp-file-include';
 
 let paths = {
     html: {
-        src: 'src/**/*.html',
-        main: 'src/*.html',
+        src: 'src/html/**/*.html',
+        main: 'src/html/pages/*.html',
         dest: 'dist/'
     },
     js: {
         src: 'src/**/*.js',
-        dest: 'dist/assets/js/'
+        dest: 'dist/assets/'
     },
     styles: {
         src: 'src/scss/**/*.scss',
@@ -138,12 +138,12 @@ async function watch() {
     gulp.watch((paths.html.src)).on('change', sync.reload);
     gulp.watch(paths.js.src, js);
     gulp.watch(paths.styles.src, styles).on('change', sync.reload);
-    gulp.watch(paths.images.src, images);
-    gulp.watch(paths.images.src, imagesToAvif);
+    // gulp.watch(paths.images.src, images);
+    // gulp.watch(paths.images.src, imagesToAvif);
     gulp.watch(paths.images.src, imagesToWebp);
 }
 
-let build = gulp.series(clean, gulp.parallel(html, js, styles, images, imagesToWebp, imagesToAvif), watch);
+let build = gulp.series(gulp.parallel(html, js, styles, imagesToWebp), watch);
 
 export default build
 
