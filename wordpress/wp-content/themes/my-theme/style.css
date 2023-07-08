@@ -54,6 +54,10 @@ a {
   color: black;
 }
 
+.custom-logo{
+  max-height: 56px;
+}
+
 .logo-side {
   display: flex;
   gap: 10px;
@@ -323,7 +327,7 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 30px;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
 }
 
@@ -337,8 +341,8 @@ button {
 }
 .catalog-item__image {
   margin-bottom: 8px;
-  max-width: 360px;
-  max-height: 345px;
+  width: 360px;
+  height: 345px;
   -o-object-fit: cover;
   object-fit: cover;
 }
