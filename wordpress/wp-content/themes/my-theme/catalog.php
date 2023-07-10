@@ -1,88 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="fonts.css">
-</head>
+<?php
+/* 
+    Template Name: Каталог
+*/
+?>
+<?= get_header(); ?>
 
-<body>
-    <div class="invisible-site-nav-background">
-    
-</div>
-<div class="invisible-site-nav">
-    <div class="footer-content">
-        <div class="logo-side">
-            <img class="logo-side__logo logo" src="assets/img/logo.webp" alt="logo">
-            <div class="logo-desctiption">
-                <p class="logo-desctiption__top">Правовой Штаб</p>
-                <p class="logo-desctiption__bottom">для Бизнеса</p>
-            </div>
-        </div>
-        <div class="nav-side footer-nav-side">
-            <nav class="nav-between-pages">
-                <ul class="nav-between-pages-list">
-                    <li class="nav-between-pages-list__item"><a href="/"
-                            class="nav-between-pages-list__link">Главная</a></li>
-                    <li class="nav-between-pages-list__item"><a href="catalog.html"
-                            class="nav-between-pages-list__link">Услуги</a></li>
-                </ul>
-            </nav>
-            <div class="nav-side__line"></div>
-            <nav class="nav-into-current-page">
-                <ul class="nav-into-current-page-list">
-                    <li class="nav-into-current-page-list__item"><a href="#!"
-                            class="nav-into-current-page-list__link">Преимущества</a></li>
-                    <li class="nav-into-current-page-list__item"><a href="#!"
-                            class="nav-into-current-page-list__link">Консультация</a></li>
-                </ul>
-            </nav>
-
-        </div>
-    </div>
-    <!-- <li class="invisible-site-nav__item"><a href="#" class="invisible-site-nav__link">О НАС</a></li>
-    <li class="invisible-site-nav__item"><a href="#" class="invisible-site-nav__link">ЗАПИСАТСЯ</a></li>
-    <li class="invisible-site-nav__item"><a href="#" class="invisible-site-nav__link">ЗАНЯТИЯ</a></li> -->
-</div>
-<header class="container">
-    <div class="logo-side">
-        <img class="logo-side__logo logo" src="assets/img/logo.webp" alt="logo">
-        <div class="logo-desctiption">
-            <p class="logo-desctiption__top">Правовой Штаб</p>
-            <p class="logo-desctiption__bottom">для Бизнеса</p>
-        </div>
-    </div>
-    <div class="nav-side">
-        <nav class="nav-between-pages">
-            <ul class="nav-between-pages-list">
-                <li class="nav-between-pages-list__item"><a href="/" class="nav-between-pages-list__link">Главная</a></li>
-                <li class="nav-between-pages-list__item"><a href="catalog.html" class="nav-between-pages-list__link">Услуги</a></li>
-            </ul>
-        </nav>
-        <div class="nav-side__line"></div>
-        <nav class="nav-into-current-page">
-            <ul class="nav-into-current-page-list">
-                <li class="nav-into-current-page-list__item"><a href="#!" class="nav-into-current-page-list__link">Преимущества</a></li>
-                <li class="nav-into-current-page-list__item"><a href="#!" class="nav-into-current-page-list__link button">Консультация</a></li>
-            </ul>
-        </nav>
-    </div>
-    <button class="gamburger">
-        <div class="gamburger__item"></div>
-        <div class="gamburger__item"></div>
-        <div class="gamburger__item"></div>
-    </button>
-</header>
-    <main>
+<main>
     <section class="catalog-section-1 container">
     <div class="header-box catalog-section-1__header-box">
         <h3 class="header-box__title"><span class="header-box__span">Каталог</span> услуг</h3>
         <p class="header-box__text">И получи самые подробные ответы на свои вопросы</p>
     </div>
     <div class="categories-box">
-        <div class="category-catalog-box">
+        <?php
+            $servsesCategrory = get_category_by_slug( 'servises' );
+            $categories = get_categories( [
+                'parent' => $servsesCategrory->term_id,
+            ] );
+            foreach ($categories as $key => $category) {
+                $category = (object)$category;
+                ?>
+                    <div class="category-catalog-box__line"><?= $category->name ?></div>
+                    <div class="catalog-box catalog-section-1__catalog-box">
+                <?php
+                $services = get_posts( [
+                    'numberposts' => -1,
+                    'category_name' => $category->slug,
+                    'post_type' => 'post',
+                    'suppress_filter' => true,
+                ] );
+                wp_reset_postdata();
+                foreach ($services as $key => $post) {
+                    setup_postdata($post);
+                    // echo '<pre>';
+                    // var_dump($post);
+                    ?>
+                        <div class="catalog-item">
+                            <!-- catalog-item__image -->
+                            <img src="<?= the_post_thumbnail_url('servise') ?>" alt="catalog-item-image" class="catalog-item__image">
+                            <div class="catalog-item__description">
+                                <p class="catalog-item__title"><?= $post->post_title ?></p>
+                                <?= the_content() ?>
+                            </div>
+                            <form action="<?= esc_url(admin_url('admin-ajax.php')); ?>" method="post" class="catalog-item__form">
+                                <input type="hidden" name="id" value="<?= $post->ID ?>">
+                                <?= wp_nonce_field('my-ajax-nonce', 'ajax_nonce'); ?>
+                                <button class="catalog-item__button button">Заказать</button>
+                            </form>
+                        </div>
+                    <?php
+                    wp_reset_postdata();
+                }
+                ?>
+                    </div>
+                <?php
+            }
+        ?>
+        <!-- <div class="category-catalog-box">
             <div class="category-catalog-box__line">Некая категория - 1</div>
             <div class="catalog-box catalog-section-1__catalog-box">
                 <div class="catalog-item">
@@ -171,53 +145,31 @@
                     <a href="!#" class="catalog-item__button button">Заказать</a>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
-</section>
-    <section class="catalog-section-2 container">
-    <div class="header-box catalog-section-2__header-box header-box_center">
-        <h3 class="header-box__title"><span class="header-box__span">Оставь заявку на </span>консультацию</h3>
-        <p class="header-box__text">И получи самые подробные ответы на свои вопросы</p>
-    </div>
-    <form action="#!" class="catalog-section-2__form form-consult">
-        <input class="form-consult__input" placeholder="Имя" type="text" name="name">
-        <input class="form-consult__input" placeholder="Номер телефона" type="text" name="phone">
-        <button class="form-consult__button button button_target">Консультация</button>
-    </form>
-</section>
-    </main>
-    <footer>
-    <div class="footer-content">
-        <div class="logo-side">
-            <img class="logo-side__logo logo" src="assets/img/logo.webp" alt="logo">
-            <div class="logo-desctiption">
-                <p class="logo-desctiption__top">Правовой Штаб</p>
-                <p class="logo-desctiption__bottom">для Бизнеса</p>
-            </div>
+    </section>
+        <section class="catalog-section-2 container">
+        <div class="header-box catalog-section-2__header-box header-box_center">
+            <h3 class="header-box__title"><span class="header-box__span">Оставь заявку на </span>консультацию</h3>
+            <p class="header-box__text">И получи самые подробные ответы на свои вопросы</p>
         </div>
-        <div class="nav-side footer-nav-side">
-            <nav class="nav-between-pages">
-                <ul class="nav-between-pages-list">
-                    <li class="nav-between-pages-list__item"><a href="/"
-                            class="nav-between-pages-list__link">Главная</a></li>
-                    <li class="nav-between-pages-list__item"><a href="catalog.html"
-                            class="nav-between-pages-list__link">Услуги</a></li>
-                </ul>
-            </nav>
-            <div class="nav-side__line"></div>
-            <nav class="nav-into-current-page">
-                <ul class="nav-into-current-page-list">
-                    <li class="nav-into-current-page-list__item"><a href="#!"
-                            class="nav-into-current-page-list__link">Преимущества</a></li>
-                    <li class="nav-into-current-page-list__item"><a href="#!"
-                            class="nav-into-current-page-list__link">Консультация</a></li>
-                </ul>
-            </nav>
+        <form method="post" action="<?= esc_url( admin_url('admin-post.php') ); ?>" class="catalog-section-2__form form-consult">
+            <?php
+                $regexpArray = [];
+                $formFields = CFS()->get('section_5_form_fields');
+                foreach ($formFields as $key => $field) {
+                    $field = (object)$field;
+                    $regexpArray[$field->name] = $field->regexp;
+                    ?>
+                    <input class="form-consult__input" placeholder="<?= $field->placeholder ?>" type="text" name="<?= $field->name ?>">
+                    <?php
+                }
+            ?>
+            <input type="hidden" name="regexp" value='<?= json_encode($regexpArray, JSON_UNESCAPED_UNICODE) ?>'>
+            <input type="hidden" name="action" value="add_bid_action">
+            <button type="submit" class="form-consult__button button button_target"><?= CFS()->get('section_5_button') ?></button>
+        </form>
+    </section>
+</main>
 
-        </div>
-    </div>
-</footer>
-<script src="assets/js/main.js"></script>
-</body>
-
-</html>
+<?= get_footer(); ?>
