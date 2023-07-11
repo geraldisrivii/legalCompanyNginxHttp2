@@ -12,6 +12,9 @@ class Validator{
     }
     public function run(){
         foreach ($this->validationRules as $key => $rule) {
+            if(!isset($this->validationValues[$key])){
+                continue;
+            }
             if(preg_match($rule, $this->validationValues[$key])){
                 $this->validatedValues[$key] = $this->validationValues[$key];
                 unset($this->validationValues[$key]);
@@ -21,7 +24,7 @@ class Validator{
     }
 
     public function is_valid_all(){
-        return empty($this->validationValues);
+        return count($this->validatedValues) == count($this->validationRules);
     }
 
     public function is_valid($key){
