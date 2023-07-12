@@ -4,8 +4,10 @@ services:
     image: wordpress:6.2.2-php8.0-fpm
     volumes:
       - ./wordpress/:/var/www/html
+    networks:
+      - default
     ports:
-      - 8000:9000
+      - 9000
     container_name: p2_wordpress
     depends_on:
       - db
@@ -17,16 +19,18 @@ services:
       - ./nginx/nginx.conf/:/etc/nginx/nginx.conf
       - ./nginx/logs/:/var/log/nginx
       - ./etc/letsencrypt:/etc/letsencrypt
+    networks:
+      - default
     ports:
-      - 150:120
-      - 443:443
+      - 80
+      - 443
     depends_on:
       - wordpress
   certbot:
     image: certbot/certbot
     depends_on:
       - nginx
-    container_name: certbot
+    container_name: p2_certbot
     volumes:
       - ./etc/letsencrypt:/etc/letsencrypt
       - ./wordpress/:/var/www/html
@@ -36,7 +40,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - 3306:3306
+      - 3306
     container_name: p2_db
     volumes:
       - ./mysql:/var/lib/mysql
@@ -55,4 +59,5 @@ services:
 
 networks:
   default:
-    driver: bridge
+    external:
+      name: custom_net
