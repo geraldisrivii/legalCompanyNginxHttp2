@@ -22,15 +22,15 @@ services:
       - 443:443
     depends_on:
       - wordpress
-  # certbot:
-  #   image: certbot/certbot
-  #   depends_on:
-  #     - nginx
-  #   container_name: certbot
-  #   volumes:
-  #     - ./etc/letsencrypt:/etc/letsencrypt
-  #     - ./wordpress/:/var/www/html
-  #   command: certonly --webroot --webroot-path=/var/www/html --email pavlenko.at@mail.ru --agree-tos --no-eff-email -d cosmos-prosto.space
+  certbot:
+    image: certbot/certbot
+    depends_on:
+      - nginx
+    container_name: certbot
+    volumes:
+      - ./etc/letsencrypt:/etc/letsencrypt
+      - ./wordpress/:/var/www/html
+    # command: certonly --webroot --webroot-path=/var/www/html --email pavlenko.at@mail.ru --agree-tos --no-eff-email -d cosmos-prosto.space
   db:
     image: mysql:8.0
     environment:
