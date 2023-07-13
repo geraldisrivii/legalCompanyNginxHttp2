@@ -28,7 +28,7 @@ services:
     volumes:
       - ./etc/letsencrypt:/etc/letsencrypt
       - ./wordpress/:/var/www/html
-    # command: certonly --webroot --webroot-path=/var/www/html --email aleksander.freelancer@gmail.com --agree-tos --no-eff-email -d legal-services.site
+    command: certonly --webroot --webroot-path=/var/www/html --email aleksander.freelancer@gmail.com --agree-tos --no-eff-email -d legal-services.site
   p2_db:
     image: mysql:8.0
     environment:
