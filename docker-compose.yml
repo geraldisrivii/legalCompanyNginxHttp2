@@ -4,8 +4,6 @@ services:
     image: wordpress:6.2.2-php8.0-fpm
     volumes:
       - ./wordpress/:/var/www/html
-    ports:
-      - 9000:9000
     container_name: p2_wordpress
     depends_on:
       - p2_db
@@ -18,7 +16,7 @@ services:
       - ./nginx/logs/:/var/log/nginx
       - ./etc/letsencrypt:/etc/letsencrypt
     ports:
-      - 80:80
+      - 150:80
       - 443:443
     depends_on:
       - wordpress
@@ -35,8 +33,6 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root
-    ports:
-      - 3306:3306
     container_name: p2_db
     volumes:
       - ./mysql:/var/lib/mysql
