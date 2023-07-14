@@ -4,11 +4,30 @@ add_action( 'after_setup_theme', 'add_features');
 add_theme_support( 'custom-logo');
 
 function add_scripts_and_styles(){
+
     wp_enqueue_script('cookieLib', get_template_directory_uri() . '/assets/js/cookieLib.js', array(), '1.0.0', true);
     wp_enqueue_script('sweetAlert', get_template_directory_uri() . '/assets/js/sweetAlert.js', array(), '1.0.0', true);
     wp_enqueue_script('main', get_template_directory_uri() . '/assets/js/main.js', array('cookieLib', 'sweetAlert'), '1.0.0', true);
-    wp_enqueue_style( 'fonts' , get_template_directory_uri() . '/assets/css/fonts.css');
-    wp_enqueue_style( 'main' , get_stylesheet_uri());
+
+    // crucial styles
+    // wp_enqueue_style( 'crucial-style' , get_template_directory_uri() . '/assets/css/crucial.css');
+
+    wp_dequeue_style('wp-block-library');
+    // wp_enqueue_style( 'fonts' , get_template_directory_uri() . '/assets/css/fonts.css');
+    // wp_enqueue_style( 'main' , get_stylesheet_uri());
+}
+
+add_action('wp_footer', 'add_deferred_styles_script');
+
+function add_deferred_styles_script(){
+    $loadCssUri = get_template_directory_uri() . '/assets/js/loadCss.js';
+    $basePath = get_template_directory_uri();
+    $mainStylesUri = get_stylesheet_uri();
+    echo "<script src='{$loadCssUri}'></script>";
+    echo "<script>
+            loadCSS('{$basePath}/assets/css/fonts.css');
+            loadCSS('{$mainStylesUri}');
+        </script>";
 }
 
 function add_features(){
